@@ -1,154 +1,194 @@
-const screen = document.querySelector('.screen'),
-    time = document.querySelector('.time'),
-    score = document.querySelector('.score'),
-    maxScore = document.querySelector('.score-max'),
-    startGameButton = document.querySelector('.start-game'),
-    pauseGameButton = document.querySelector('.pause-game'),
-    snakeTails = document.querySelectorAll('.snake-tail'),
-    apple = document.querySelector('.apple')
+const container = document.querySelector('.container'),
+startGameButton = container.querySelector('.start-game')
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; // n in [min, max)
-}
+startGameButton.addEventListener('click', () => {
+    startGameButton.remove()
+    container.insertAdjacentHTML('beforebegin', 
+    `
+    <div class="screen">
+          <div class="snake-tail"></div>
+          <div class="snake-tail"></div>
+          <div class="snake-tail"></div>
+          <div class="apple"></div>
+      </div>
+      <div class="panel">
+        <h1 class="score">Score: </h1>
+      </div>
+    `)
 
-function drawSnake() {
-    for (let i = 0; i < snake.length; i++) {
-        snake[i].obj.style.gridColumnStart = '' + snake[i].x
-        snake[i].obj.style.gridRowStart = '' + snake[i].y
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min; // n in [min, max)
     }
-}
 
-function drawApples() {
-    food.obj.style.gridColumnStart = '' + food.x
-    food.obj.style.gridRowStart = '' + food.y
-}
+    function drawSnake() {
+        for (let i = 0; i < snake.length; i++) {
+            snake[i].obj.style.gridColumnStart = '' + snake[i].x
+            snake[i].obj.style.gridRowStart = '' + snake[i].y
+        }
+    }
 
+    function drawApples() {
+        food.obj.style.gridColumnStart = '' + food.x
+        food.obj.style.gridRowStart = '' + food.y
+    }
 
-
-function loop() {
-    // change direction
-    window.addEventListener('keydown', e => {
-        e.preventDefault()
-        if (e.key == "ArrowRight") {
+    function changeDirection(event) {
+        event.preventDefault()
+        if (event.key == "ArrowRight" && direction !== 'left') {
             stepX = 1
             stepY = 0
+            direction = 'right'
         }
-    })
-    window.addEventListener('keydown', e => {
-        e.preventDefault()
-        if (e.key == "ArrowLeft") {
+        if (event.key == "ArrowLeft" && direction !== 'right') {
             stepX = -1
             stepY = 0
+            direction = 'left'
         }
-    })
-    window.addEventListener('keydown', e => {
-        e.preventDefault()
-        if (e.key == "ArrowDown") {
+        if (event.key == "ArrowDown" && direction !== 'up') {
             stepY = 1
             stepX = 0
+            direction = 'down'
         }
-    })
-    window.addEventListener('keydown', e => {
-        e.preventDefault()
-        if (e.key == "ArrowUp") {
+        if (event.key == "ArrowUp" && direction !== 'down') {
             stepY = -1
             stepX = 0
+            direction = 'up'
         }
-    })
-    // movement
-    prevX = snake[0].x
-    prevY = snake[0].y
-    snake[0].x += stepX
-    snake[0].y += stepY
-    let tempX, tempY
-    for (let i = 1; i < snake.length; i++) {
-        tempX = snake[i].x
-        tempY = snake[i].y
-        snake[i].x = prevX
-        snake[i].y = prevY
-        prevX = tempX
-        prevY = tempY
     }
-    drawSnake()
-    // game over
-    if (snake[0].x === 20 || snake[0].x === 0 || snake[0].y === 15 || snake[0].y === 0) {
-        clearInterval(interval)
-    }
-    if (snake[0].x === snake[1].x && snake[0].y === snake[1].y) {
-        snake[0].x = prevX
-        snake[0].y = prevY
 
+    function gameOver() {
+        gameArea.remove()
+        panel.insertAdjacentHTML('beforeend', `<button class="reset-game">Restart</button>`)
+        panel.style.marginTop = '40vh'
+        btn = panel.querySelector('button')
+        btn.addEventListener('click', () => {
+            location.reload()
+        })
     }
-    //  food && add new tail
-    if (snake[0].x === food.x && snake[0].y === food.y) {
-        let newTail = document.createElement('div')
-        newTail.classList.add('snake-tail')
+
+    function loop() {
+        // change direction
+        window.addEventListener('keydown', e => {
+            changeDirection(e)
+        })
+
+        // movement
+        prevX = snake[0].x
+        prevY = snake[0].y
+        snake[0].x += stepX
+        snake[0].y += stepY
+        let tempX, tempY
+        for (let i = 1; i < snake.length; i++) {
+            tempX = snake[i].x
+            tempY = snake[i].y
+            snake[i].x = prevX
+            snake[i].y = prevY
+            prevX = tempX
+            prevY = tempY
+        }
+        drawSnake()
+        // wall collision
+        if (snake[0].x === xLimit || snake[0].x === 0 || snake[0].y === yLimit || snake[0].y === 0) {
+            clearInterval(interval)
+            gameOver()
+        }
+        // selfeating
+        for (let i = 1; i < snake.length; i++) {
+            if (snake[0].x === snake[i].x && snake[0].y === snake[i].y) {
+                clearInterval(interval)
+                gameOver()
+            }
+        }
+        //  eat food 
+        if (snake[0].x === food.x && snake[0].y === food.y) {
+            // inc score
+            scoreCount++
+            // create new tail
+            let newTail = document.createElement('div')
+            newTail.classList.add('snake-tail')
+            let snakeTail = {
+                obj: newTail,
+                x: snake[snake.length - 1].x,
+                y: snake[snake.length - 1].y,
+            }
+            // add new tail 
+            snake.push(snakeTail)
+            snake[snake.length - 1].obj.style.gridColumnStart = '' + snake[snake.length - 1].x
+            snake[snake.length - 1].obj.style.gridRowStart = '' + snake[snake.length - 1].y
+            gameArea.appendChild(newTail)
+            food.x = getRandomInt(1, xLimit)
+            food.y = getRandomInt(1, yLimit)
+            // if food spwn in the snake
+            let isInSnake = false
+            for (let i = 0; i < snake.length; i++) {
+                if (food.x === snake[i].x && food.y === snake[i].y) {
+                    isInSnake = true
+                }
+                if (isInSnake) {
+                    food.x = getRandomInt(1, xLimit)
+                    food.y = getRandomInt(1, yLimit)
+                    isInSnake = false
+                }
+            }
+            drawApples()
+            // output score
+            score.textContent = `Score: ${scoreCount}`
+        }
+    }
+
+    // global variables for interface
+    const gameArea = document.querySelector('.screen'),
+        panel = document.querySelector('.panel'),
+        time = document.querySelector('.time'),
+        score = document.querySelector('.score'),
+        snakeTails = document.querySelectorAll('.snake-tail'),
+        apple = document.querySelector('.apple'),
+        xLimit = 25,
+        yLimit = 20,
+        speed = 100
+    // global variables for movement
+    let stepX = 1,
+        stepY = 0,
+        prevX, prevY, lastY, lastX,
+        direction = 'right',
+        scoreCount = 0
+
+
+    // map settings
+    let map = new Array(yLimit)
+    for (let i = 0; i < yLimit; i++) {
+        map[i] = new Array(xLimit)
+    }
+    gameArea.style.display = 'grid'
+    gameArea.style.gridTemplate = `repeat(${yLimit}, 1fr) / repeat(${xLimit}, 1fr)`
+    // snake settings
+    let snake = []
+    snakeTails.forEach(e => {
         let snakeTail = {
-            obj: newTail,
-            x: snake[snake.length - 1].x,
-            y: snake[snake.length - 1].y,
+            obj: e,
+            x: 0,
+            y: 0
         }
         snake.push(snakeTail)
-        snake[snake.length - 1].obj.style.gridColumnStart = '' + snake[snake.length - 1].x
-        snake[snake.length - 1].obj.style.gridRowStart = '' + snake[snake.length - 1].y
-        screen.appendChild(newTail)
-        food.x = getRandomInt(1, 20)
-        food.y = getRandomInt(1, 15)
-        let isOnSnake = false
-        for (let i = 0; i < snake.length; i++) {
-            if (food.x === snake[i].x && food.y === snake[i].y) {
-                isOnSnake = true
-            }
-            if (isOnSnake) {
-                food.x = getRandomInt(1, 20)
-                food.y = getRandomInt(1, 15)
-                isOnSnake = false
-            }
-        }
-        drawApples()
-        score.textContent = snake.length
+    })
+    snake[0].x = 5
+    snake[0].y = 10
+    for (let i = 1; i < snake.length; i++) {
+        snake[i].x = snake[i - 1].x - 1
+        snake[i].y = snake[i - 1].y
     }
-}
+    drawSnake()
+    //apple settings
+    let food = {
+        obj: apple,
+        x: getRandomInt(1, 20),
+        y: getRandomInt(1, 15)
+    }
+    drawApples()
+    // output score
+    score.textContent = `Score: ${scoreCount}`
 
-let map = new Array(15)
-for (let i = 0; i < 10; i++) {
-    map[i] = new Array(20)
-}
-screen.style.display = 'grid'
-screen.style.gridTemplateColumns = 'repeat(20, 1fr)'
-screen.style.gridTemplateRows = 'repeat(15, 1fr)'
-// snake settings
-let snake = []
-let originSnake = []
-snakeTails.forEach(e => {
-    let snakeTail = {
-        obj: e,
-        x: 0,
-        y: 0
-    }
-    snake.push(snakeTail)
-    originSnake.push(snakeTail)
+    let interval = setInterval(loop, speed)
 })
-snake[0].x = 5
-snake[0].y = 10
-for (let i = 1; i < snake.length; i++) {
-    snake[i].x = snake[i - 1].x - 1
-    snake[i].y = snake[i - 1].y
-}
-let stepX = 1
-let stepY = 0
-let slow = 300
-let prevX, prevY, lastY, lastX
-drawSnake()
-//apple settings
-let food = {
-    obj: apple,
-    x: getRandomInt(1, 20),
-    y: getRandomInt(1, 15)
-}
-drawApples()
-score.textContent = snake.length
-
-let interval = setInterval(loop, 100)

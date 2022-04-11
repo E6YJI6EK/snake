@@ -1,25 +1,25 @@
 @import 'variables'
 
+* 
+    font-family: monospace
+
 =flex($sb, $ai, $ff)
     display: flex
     justify-content: $sb
     align-items: $ai
     flex-flow: $ff
 
-@font-face 
-    font-family: Pixies
-    src: url(fonts/anothercastle3.ttf)
 
 
 body
     background: #000
-    font-family: Pixies, sans-serif
     color: $white
 
 .container
     margin: auto
     width: 1200px
     +flex(space-between, center, column)
+    margin-top: 45vh 
     
 
 .screen
@@ -30,24 +30,17 @@ body
 
 .panel
     +flex(space-evenly, center, row)
+    margin: auto
     width: 1024px
     padding: 20px 0
 
-.score, .score-max, .time
-    border: 2px solid $white
-    text-align: center
-    height: 25px
-    width: 50px
-
-
-.button
+button
     color: $white
     cursor: pointer
     border: 2px solid $white
     background: transparent
     outline: none
     padding: 10px 20px
-    font-family: Pixies
 
 .snake-tail
     width: 100%
@@ -61,3 +54,6 @@ body
     margin: auto
     border: 1px solid $white
     background-color: $white
+
+.gameover 
+    +flex(center, center, center)
