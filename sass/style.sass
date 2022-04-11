@@ -1,0 +1,63 @@
+@import 'variables'
+
+=flex($sb, $ai, $ff)
+    display: flex
+    justify-content: $sb
+    align-items: $ai
+    flex-flow: $ff
+
+@font-face 
+    font-family: Pixies
+    src: url(fonts/anothercastle3.ttf)
+
+
+body
+    background: #000
+    font-family: Pixies, sans-serif
+    color: $white
+
+.container
+    margin: auto
+    width: 1200px
+    +flex(space-between, center, column)
+    
+
+.screen
+    width: 1024px
+    height: 740px
+    border: 2px solid $white
+    margin: auto
+
+.panel
+    +flex(space-evenly, center, row)
+    width: 1024px
+    padding: 20px 0
+
+.score, .score-max, .time
+    border: 2px solid $white
+    text-align: center
+    height: 25px
+    width: 50px
+
+
+.button
+    color: $white
+    cursor: pointer
+    border: 2px solid $white
+    background: transparent
+    outline: none
+    padding: 10px 20px
+    font-family: Pixies
+
+.snake-tail
+    width: 100%
+    height: 100%
+    border: 3px solid $white
+
+.apple
+    width: 100%
+    height: 100%
+    border-radius: 50%
+    margin: auto
+    border: 1px solid $white
+    background-color: $white
