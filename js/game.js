@@ -1,8 +1,16 @@
 const container = document.querySelector('.container'),
 startGameButton = container.querySelector('.start-game')
 
+
 startGameButton.addEventListener('click', () => {
+    const difficultChoices = container.querySelectorAll('input'),
+        velocities = [300, 200, 100]
+    difficultChoices.forEach(e => {
+        e.disabled = true
+    })
+
     startGameButton.remove()
+
     container.insertAdjacentHTML('beforebegin', 
     `
     <div class="screen">
@@ -15,6 +23,14 @@ startGameButton.addEventListener('click', () => {
         <h1 class="score">Score: </h1>
       </div>
     `)
+
+    function setDifficult() {
+        for (let i = 0; i < difficultChoices.length; i++) {
+            if (difficultChoices[i].checked) {
+                return velocities[i]
+            }
+        }
+    }
 
     function getRandomInt(min, max) {
         min = Math.ceil(min);
@@ -61,7 +77,6 @@ startGameButton.addEventListener('click', () => {
     function gameOver() {
         gameArea.remove()
         panel.insertAdjacentHTML('beforeend', `<button class="reset-game">Restart</button>`)
-        panel.style.marginTop = '40vh'
         btn = panel.querySelector('button')
         btn.addEventListener('click', () => {
             location.reload()
@@ -90,7 +105,7 @@ startGameButton.addEventListener('click', () => {
         }
         drawSnake()
         // wall collision
-        if (snake[0].x === xLimit || snake[0].x === 0 || snake[0].y === yLimit || snake[0].y === 0) {
+        if (snake[0].x === xLimit+1 || snake[0].x === 0 || snake[0].y === yLimit+1 || snake[0].y === 0) {
             clearInterval(interval)
             gameOver()
         }
@@ -141,17 +156,16 @@ startGameButton.addEventListener('click', () => {
     // global variables for interface
     const gameArea = document.querySelector('.screen'),
         panel = document.querySelector('.panel'),
-        time = document.querySelector('.time'),
         score = document.querySelector('.score'),
         snakeTails = document.querySelectorAll('.snake-tail'),
         apple = document.querySelector('.apple'),
-        xLimit = 25,
-        yLimit = 20,
-        speed = 100
+        xLimit = 20,
+        yLimit = 10,
+        speed = setDifficult()
     // global variables for movement
     let stepX = 1,
         stepY = 0,
-        prevX, prevY, lastY, lastX,
+        prevX, prevY, 
         direction = 'right',
         scoreCount = 0
 
@@ -161,7 +175,6 @@ startGameButton.addEventListener('click', () => {
     for (let i = 0; i < yLimit; i++) {
         map[i] = new Array(xLimit)
     }
-    gameArea.style.display = 'grid'
     gameArea.style.gridTemplate = `repeat(${yLimit}, 1fr) / repeat(${xLimit}, 1fr)`
     // snake settings
     let snake = []
@@ -183,8 +196,8 @@ startGameButton.addEventListener('click', () => {
     //apple settings
     let food = {
         obj: apple,
-        x: getRandomInt(1, 20),
-        y: getRandomInt(1, 15)
+        x: getRandomInt(1, xLimit),
+        y: getRandomInt(1, yLimit)
     }
     drawApples()
     // output score

@@ -2,6 +2,7 @@
 
 * 
     font-family: monospace
+    box-sizing: border-box
 
 =flex($sb, $ai, $ff)
     display: flex
@@ -14,12 +15,16 @@
 body
     background: #000
     color: $white
+    margin: 0
+    padding: 0
+    height: 100vh
+    +flex(space-between, center, column)    
 
 .container
     margin: auto
     width: 1200px
     +flex(space-between, center, column)
-    margin-top: 45vh 
+
     
 
 .screen
@@ -27,12 +32,19 @@ body
     height: 740px
     border: 2px solid $white
     margin: auto
+    display: grid
+    column-gap: 3px
+    row-gap: 3px
+    padding: 3px
 
 .panel
     +flex(space-evenly, center, row)
-    margin: auto
+    margin: auto 
     width: 1024px
-    padding: 20px 0
+
+.panel
+    button 
+        margin: 0
 
 button
     color: $white
@@ -41,6 +53,18 @@ button
     background: transparent
     outline: none
     padding: 10px 20px
+    margin-bottom: 50px
+
+.movement-description
+    width: 250px
+    +flex(space-between, start, column)
+
+.difficult-choice-form
+    width: 110px
+    +flex(space-between, start, column)
+.game-settings
+    width: 500px
+    +flex(space-between, start, row)
 
 .snake-tail
     width: 100%
@@ -55,5 +79,3 @@ button
     border: 1px solid $white
     background-color: $white
 
-.gameover 
-    +flex(center, center, center)

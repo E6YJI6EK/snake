@@ -10,6 +10,28 @@
   <body>
     <div class="container">
       <button class="start-game">Start Game</button>
+      <div class="game-settings">
+        <div class="movement-description">
+          <h2>Movement on keyboard:</h2>
+          <p>Arrow Up - Up</p>
+          <p>Arrow Down - Down</p>
+          <p>Arrow Right - Right</p>
+          <p>Arrow Left - Left</p>
+        </div>
+
+        <div class="difficult-choice-form">
+          <h2>Difficult:</h2>
+          <label for="easy"
+            ><input type="radio" name="choice" id="easy" required checked/> Easy mode</label
+          >
+          <label for="middle"
+            ><input type="radio" name="choice" id="middle" required/> Medium</label
+          >
+          <label for="hard"
+            ><input type="radio" name="choice" id="hard" required/> For Brutals</label
+          >
+        </div>
+      </div>
     </div>
   </body>
   <script src="js/game.js"></script>
