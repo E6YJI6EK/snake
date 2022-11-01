@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="static/css/style.css" />
+  <title>Snake</title>
+</head>
+
+<body>
+  <div class="modal-outer hidden">
+    <div class="modal-inner">
+      <h2>Do You really don't wanna get on the leaderboard?</h2>
+      <p>For this need to enter your name into input</p>
+      <div class="buttons">
+        <button class="yes">Yes</button>
+        <button class="no">No</button>
+      </div>
+    </div>
+  </div>
+  <div class="screen hidden">
+    <div class="snake-tail"></div>
+    <div class="snake-tail"></div>
+    <div class="snake-tail"></div>
+    <div class="apple"></div>
+  </div>
+  <div class="panel hidden">
+    <h1 class="score">Your Score: </h1>
+  </div>
+  <div class="container">
+    <button class="start-game">Start Game</button>
+    <div class="game-settings">
+      <div class="movement-description">
+        <h2>Movement on keyboard:</h2>
+        <p>Arrow Up - Up</p>
+        <p>Arrow Down - Down</p>
+        <p>Arrow Right - Right</p>
+        <p>Arrow Left - Left</p>
+      </div>
+
+      <div class="difficult-choice-form">
+        <h2>Difficult:</h2>
+        <label for="easy"><input type="radio" name="choice" id="easy" required checked /> Easy mode</label>
+        <label for="middle"><input type="radio" name="choice" id="middle" required /> Medium</label>
+        <label for="hard"><input type="radio" name="choice" id="hard" required /> For Brutals</label>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="static/js/sound.js" type="module"></script>
+<script src="static/js/Snake.js" type="module"></script>
+<script src="static/js/Apple.js" type="module"></script>
+<script src="static/js/api.js" type="module"></script>
+<script src="static/js/gameSettings.js" type="module"></script>
+<script src="static/js/game.js" type="module"></script>
+
+</html>
